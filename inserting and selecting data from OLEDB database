@@ -1,0 +1,130 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.OleDb;
+
+namespace gridviewtest
+{
+    public partial class Form2 : Form
+    {
+        int counter = 0;
+        string constring = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\KrRish\Desktop\gridviewtest\gridviewtest\Database1.mdb";
+        public Form2()
+        {
+           
+            InitializeComponent();
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+
+        {
+
+            if (counter == 0)
+            {
+                int flag = 0;
+                if (textBox1.Text != null || textBox2.Text != null ||  textBox3.Text != null ||  textBox4.Text!=null)
+                {
+                    string StrQuery = @"INSERT INTO Table2 (Party,Broker,City,item)  VALUES ('" + textBox1.Text + "','" + textBox2.Text + "', '" + textBox3.Text + "','" + textBox4.Text + "');";
+
+                    try
+                    {
+                        using (OleDbConnection con = new OleDbConnection(constring))
+                        {
+                            using (OleDbCommand cmd = new OleDbCommand(StrQuery, con))
+                            {
+                                con.Open();
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                                flag = 1;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    if (flag == 1)
+                    {
+                        MessageBox.Show("Records inserted", "Information");
+                    }
+                  
+                    counter = 1;
+                }
+            }
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'database1DataSet1.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet1.Table2' table. You can move, or remove it, as needed.
+           // this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+         //   this.table1TableAdapter.Fill(this.database1DataSet.Table1);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+            // TODO: This line of code loads data into the 'database1DataSet.Table2' table. You can move, or remove it, as needed.
+            this.table2TableAdapter.Fill(this.database1DataSet1.Table2);
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string sql = "SELECT * FROM Table2";
+            OleDbConnection connection = new OleDbConnection(constring);
+            OleDbDataAdapter dataadapter = new OleDbDataAdapter(sql, connection);
+            DataSet ds = new DataSet();
+            connection.Open();
+            dataadapter.Fill(ds, "Authors_table");
+            connection.Close();
+            dataGridView1.DataSource = ds;
+            dataGridView1.DataMember = "Authors_table";
+            counter = 0;
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            counter = 0;
+            {
+                textBox1.Text = "";
+                textBox2.Text = "";
+                textBox3.Text = "";
+                textBox4.Text = "";
+            }
+            MessageBox.Show("Text Box Cleared", "Information");
+        }
+
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+    }
+}
