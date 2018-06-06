@@ -1,0 +1,163 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.OleDb;
+namespace gridviewtest
+{
+
+    public partial class Form1 : Form
+    {
+        int counter = 0;
+        string constring = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\KrRish\Desktop\gridviewtest\gridviewtest\Database1.mdb;";
+        int rowIndex;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+            if (counter == 0)
+            {
+                int flag = 0;
+
+
+                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                {
+                    string StrQuery = @"INSERT INTO Table1(chno,item,quantity,rate,total,party,broker,city) VALUES ('" + dataGridView1.Rows[i].Cells["chno"].Value + "','" + dataGridView1.Rows[i].Cells["item"].Value + "', '" + dataGridView1.Rows[i].Cells["quantity"].Value + "','" + dataGridView1.Rows[i].Cells["rate"].Value + "'," + dataGridView1.Rows[i].Cells["total"].Value + ",'" + textBox1.Text + "','" + textBox2.Text + "', '" + textBox3.Text + "');";
+                    try
+                    {
+                        using (OleDbConnection con = new OleDbConnection(constring))
+                        {
+                            using (OleDbCommand cmd = new OleDbCommand(StrQuery, con))
+                            {
+                                con.Open();
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                                flag = 1;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+                if (flag == 1)
+                {
+                    MessageBox.Show("Records inserted", "Information");
+                }
+                counter = 1;
+            }
+            else if(counter==1)
+            {
+                MessageBox.Show("Data alrady Saved", "Information");
+            }
+        }
+        
+       
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form2 frm = new Form2();
+            frm.Show();
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+            
+            
+            // TODO: This line of code loads data into the 'database1DataSet1.Table1' table. You can move, or remove it, as needed.
+            this.table1TableAdapter.Fill(this.database1DataSet1.Table1);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table1TableAdapter.Fill(this.database1DataSet.Table1);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table1TableAdapter.Fill(this.database1DataSet.Table1);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table1TableAdapter.Fill(this.database1DataSet.Table1);
+            // TODO: This line of code loads data into the 'database1DataSet.Table1' table. You can move, or remove it, as needed.
+            this.table1TableAdapter.Fill(this.database1DataSet.Table1);
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.dataGridView1.Rows.Clear();
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            counter = 0;
+        }
+
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+
+            
+            string sql = "SELECT * FROM Table1";
+            OleDbConnection connection = new OleDbConnection(constring);
+            OleDbDataAdapter dataadapter = new OleDbDataAdapter(sql, connection);
+            DataSet ds = new DataSet();
+            connection.Open();
+            dataadapter.Fill(ds, "Authors_table");
+            connection.Close();
+            dataGridView2.DataSource = ds;
+            dataGridView2.DataMember = "Authors_table";
+        }
+
+        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                row.Cells[dataGridView1.Columns["total"].Index].Value = (Convert.ToDouble(row.Cells[dataGridView1.Columns["quantity"].Index].Value) * Convert.ToDouble(row.Cells[dataGridView1.Columns["rate"].Index].Value));
+
+
+            }
+        }
+
+        private void dataGridView2_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                this.dataGridView2.Rows[e.RowIndex].Selected = true;
+                this.rowIndex = e.RowIndex;
+                this.dataGridView2.CurrentCell = this.dataGridView2.Rows[e.RowIndex].Cells[1];
+                this.contextMenuStrip1.Show(this.dataGridView2, e.Location);
+                contextMenuStrip1.Show(Cursor.Position);
+            }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_Click(object sender, EventArgs e)
+        {
+            if (!this.dataGridView1.Rows[this.rowIndex].IsNewRow)
+            {
+                this.dataGridView2.Rows.RemoveAt(this.rowIndex);
+            }
+        }
+    }
+
+    
+   }
+    
